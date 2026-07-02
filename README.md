@@ -35,8 +35,22 @@ The application includes:
 - Monthly Charges
 
 ## Dashboard
+## Dashboard
 
-![Dashboard](screenshots/dashboard.png)
+### Low Churn Risk Example
+
+![Dashboard](screenshots/dashboard1.png)
+
+Customer predicted to remain with the service.
+Churn Probability: 3%
+
+### High Churn Risk Example
+
+![Dashboard](screenshots/dashboard1.png)
+
+Customer predicted to churn.
+Churn Probability: 75%
+
 
 ## SHAP Feature Importance
 
