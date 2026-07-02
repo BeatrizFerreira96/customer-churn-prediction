@@ -188,6 +188,44 @@ button:hover {
     font-size: 14px;
     padding-top: 20px;
     border-top: 1px solid #eee;
+
+
+.explanation-container {
+    margin-top: 25px;
+}
+
+.explanation-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.explanation-card {
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.increase-risk {
+    background: #fff5f5;
+    border-left: 5px solid #f44336;
+}
+
+.reduce-risk {
+    background: #f1fff4;
+    border-left: 5px solid #4CAF50;
+}
+
+.explanation-card h3 {
+    margin-top: 0;
+}
+
+.explanation-card ul {
+    padding-left: 20px;
+}
+
+.explanation-card li {
+    margin-bottom: 8px;
+}    
 }
 </style>
 </head>
@@ -324,6 +362,7 @@ button:hover {
 
 <div id="recommendationBox"></div>
 
+<div id="explanations"></div>
 
 <footer class="footer">
     Built by Beatriz Ferreira |
@@ -495,6 +534,47 @@ recommendationBox.className =
 recommendationBox.innerHTML = `
     <h3>${recommendationTitle}</h3>
     <p>${recommendationText}</p>
+`;
+
+const explanationsDiv =
+    document.getElementById("explanations");
+
+const positiveList =
+    result.top_positive
+        .map(item =>
+            `<li>⬆ ${item.feature}</li>`
+        )
+        .join("");
+
+const negativeList =
+    result.top_negative
+        .map(item =>
+            `<li>⬇ ${item.feature}</li>`
+        )
+        .join("");
+
+explanationsDiv.innerHTML = `
+<div class="explanation-container">
+
+    <div class="explanation-columns">
+
+        <div class="explanation-card increase-risk">
+            <h3>Factors Increasing Churn Risk</h3>
+            <ul>
+                ${positiveList}
+            </ul>
+        </div>
+
+        <div class="explanation-card reduce-risk">
+            <h3>Factors Reducing Churn Risk</h3>
+            <ul>
+                ${negativeList}
+            </ul>
+        </div>
+
+    </div>
+
+</div>
 `;
 
 button.disabled = false;
