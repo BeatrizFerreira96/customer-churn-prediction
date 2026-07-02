@@ -60,17 +60,8 @@ Top predictors of churn:
 - HTML/CSS/JavaScript
 - Git
 
-## Run Locally
-
-```bash
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-Open:
-
-```text
-http://127.0.0.1:8000
+## Run on Render
+https://customer-churn-prediction-o6mm.onrender.com
 ```
 
 ## Author
