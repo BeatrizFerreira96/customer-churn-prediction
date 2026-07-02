@@ -15,12 +15,17 @@ The application includes:
 - FastAPI backend
 - Interactive HTML frontend
 
-## Model Performance
+## Model Selection
 
-| Metric | Value |
-|----------|----------|
-| Accuracy | 0.79 |
-| ROC-AUC | 0.84 |
+Multiple machine learning algorithms were evaluated before deployment.
+
+| Model | Accuracy | ROC-AUC |
+|---------|---------|---------|
+| Logistic Regression | 0.791 | 0.840 |
+| XGBoost | 0.774 | 0.829 |
+
+Logistic Regression achieved superior performance on the held-out test set and was selected as the final production model. In addition to achieving the highest ROC-AUC score, Logistic Regression offers excellent interpretability, making it well-suited for business decision-making and SHAP-based explainability.
+
 
 ## Features
 
@@ -34,7 +39,7 @@ The application includes:
 - Payment Method
 - Monthly Charges
 
-## Dashboard
+
 ## Dashboard
 
 ### Low Churn Risk Example
@@ -77,6 +82,14 @@ Top predictors of churn:
 ## Run on Render
 https://customer-churn-prediction-o6mm.onrender.com
 ```
+## Future Improvements
+
+- Real-time SHAP explanations inside the dashboard
+- Enhanced business recommendations
+- Prediction history tracking
+- Interactive visual analytics
+- Customer segmentation insights
+
 
 ## Author
 
