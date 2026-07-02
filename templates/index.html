@@ -106,7 +106,10 @@ button:hover {
     background: #ffebee;
     color: #c62828;
 }
-
+.result-medium {
+    background: #fff8e1;
+    color: #ef6c00;
+}
 .shap-box {
     margin-top: 20px;
     padding: 20px;
@@ -440,21 +443,25 @@ document.getElementById("form").onsubmit = async function(e) {
     loadingDiv.style.display = "none";
     console.log(result);
 
-    const resultDiv = document.getElementById("result");
+ const resultDiv = document.getElementById("result");
 
-    resultDiv.style.display = "block";
+resultDiv.style.display = "block";
 
-    resultDiv.className =
-        "result-box " +
-        (result.prediction === "churn"
-            ? "result-high"
-            : "result-low");
-
-    resultDiv.innerText =
-        result.prediction === "churn"
-            ? "⚠ High Churn Risk"
-            : "✅ Customer Likely To Stay";
-
+if (result.churn_probability >= 0.6)
+{
+    resultDiv.className = "result-box result-high";
+    resultDiv.innerText = "⚠ High Churn Risk";
+}
+else if (result.churn_probability >= 0.3)
+{
+    resultDiv.className = "result-box result-medium";
+    resultDiv.innerText = "🟡 Moderate Churn Risk";
+}
+else
+{
+    resultDiv.className = "result-box result-low";
+    resultDiv.innerText = "✅ Customer Likely To Stay";
+}
 
     let confidenceLabel;
 
