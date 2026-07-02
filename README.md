@@ -46,7 +46,7 @@ Churn Probability: 3%
 
 ### High Churn Risk Example
 
-![Dashboard](screenshots/dashboard1.png)
+![Dashboard](screenshots/dashboard2.png)
 
 Customer predicted to churn.
 Churn Probability: 75%
