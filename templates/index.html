@@ -226,6 +226,12 @@ button:hover {
 .explanation-card li {
     margin-bottom: 8px;
 }    
+.explanation-container {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8f8f8;
+}
 }
 </style>
 </head>
@@ -560,16 +566,12 @@ explanationsDiv.innerHTML = `
 
         <div class="explanation-card increase-risk">
             <h3>Factors Increasing Churn Risk</h3>
-            <ul>
-                ${positiveList}
-            </ul>
+            <ul>${positiveList}</ul>
         </div>
 
         <div class="explanation-card reduce-risk">
             <h3>Factors Reducing Churn Risk</h3>
-            <ul>
-                ${negativeList}
-            </ul>
+            <ul>${negativeList}</ul>
         </div>
 
     </div>
