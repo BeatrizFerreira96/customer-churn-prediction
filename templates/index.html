@@ -377,6 +377,11 @@ button:hover {
 
 <div id="explanations"></div>
 
+<div id="shapChartContainer" style="margin-top:30px;">
+    <h3>SHAP Feature Impact</h3>
+    <canvas id="shapChart"></canvas>
+</div>
+
 <footer class="footer">
     Built by Beatriz Ferreira |
     PhD Physics • Machine Learning • FastAPI • SHAP
@@ -397,6 +402,9 @@ document.getElementById("form").onsubmit = async function(e) {
     button.disabled = true;
     button.innerText = "Predicting...";
    
+    let shapChart = null;
+
+
     const data = {
     Gender:
         document.getElementById("Gender").value,
@@ -589,6 +597,40 @@ explanationsDiv.innerHTML = `
 
 </div>
 `;
+
+console.log(result.shap_chart);
+const chartData =
+    result.shap_chart.map(item => ({
+        feature: item.feature,
+        impact: Math.abs(item.shap)
+    }));
+
+if (shapChart)
+{
+    shapChart.destroy();
+}
+
+const ctx =
+    document
+        .getElementById("shapChart")
+        .getContext("2d");
+
+
+        
+shapChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+        labels: chartData.map(x => x.feature),
+        datasets: [{
+            label: "SHAP Impact",
+            data: chartData.map(x => x.impact)
+        }]
+    },
+    options: {
+        indexAxis: "y",
+        responsive: true
+    }
+});
 
 button.disabled = false;
 button.innerText = "Estimate Churn Risk";

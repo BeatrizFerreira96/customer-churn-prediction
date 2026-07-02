@@ -132,17 +132,35 @@ def predict(customer: CustomerInput):
     .map(feature_mapping)
     .fillna(shap_df["feature"])
     )
-    
+    # Create abs_shap FIRST
+    shap_df["abs_shap"] = abs(shap_df["shap"])
+
+# Then filter
+    shap_df = shap_df[
+    shap_df["abs_shap"] > 0.05
+]
+
+# Then create positive/negative tables
     top_positive = (
     shap_df
     .sort_values("shap", ascending=False)
     .head(3)
-    )
+)
+
     top_negative = (
     shap_df
     .sort_values("shap")
     .head(3)
-    )   
+)
+
+# Then create chart data
+    shap_chart = (
+    shap_df
+    .sort_values("abs_shap", ascending=False)
+    .head(6)
+)
+
+
     
     top_positive["shap"] = top_positive["shap"].round(3)
     top_negative["shap"] = top_negative["shap"].round(3)
@@ -152,5 +170,6 @@ def predict(customer: CustomerInput):
         "churn_probability": round(float(prob), 3),
         "confidence": round(float(confidence), 3),
         "top_positive": top_positive.to_dict("records"),
-        "top_negative": top_negative.to_dict("records")
+        "top_negative": top_negative.to_dict("records"),
+        "shap_chart": shap_chart.to_dict("records")
     }
