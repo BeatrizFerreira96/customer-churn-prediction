@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
+from fastapi import UploadFile, File
+from fastapi.responses import StreamingResponse
 
+import io
 import pandas as pd
 import joblib
 import shap
@@ -12,7 +15,17 @@ model = joblib.load("src/churn_model.pkl")
 feature_names = joblib.load(
     "src/feature_names.pkl"
 )
-
+EXPECTED_COLUMNS = [
+    "Gender",
+    "Senior Citizen",
+    "Partner",
+    "Dependents",
+    "Tenure Months",
+    "Internet Service",
+    "Contract",
+    "Payment Method",
+    "Monthly Charges"
+]
 preprocessor = model.named_steps["preprocessor"]
 
 classifier = model.named_steps["classifier"]
@@ -47,7 +60,46 @@ class CustomerInput(BaseModel):
     Payment_Method: str
     Monthly_Charges: float
     
+@app.post("/batch_predict")
+async def batch_predict(file: UploadFile = File(...)):
 
+    df = pd.read_csv(file.file)
+
+    missing_cols = [
+        col for col in EXPECTED_COLUMNS
+        if col not in df.columns
+    ]
+
+    if missing_cols:
+        return {
+            "error": "Missing columns",
+            "missing": missing_cols
+        }
+
+    predictions = model.predict(df)
+    probabilities = model.predict_proba(df)[:, 1]
+
+    df["prediction"] = [
+        "Churn" if p == 1 else "No Churn"
+        for p in predictions
+    ]
+
+    df["churn_probability"] = probabilities.round(4)
+
+    output = io.StringIO()
+
+    df.to_csv(output, index=False)
+
+    output.seek(0)
+
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition":
+            "attachment; filename=predictions.csv"
+        }
+    )
 
 @app.post("/predict")
 def predict(customer: CustomerInput):

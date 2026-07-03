@@ -382,6 +382,33 @@ button:hover {
     <canvas id="shapChart"></canvas>
 </div>
 
+<hr style="margin-top:40px; margin-bottom:30px;">
+
+<h3>Batch CSV Prediction</h3>
+
+<p>
+Upload a CSV file containing multiple customers and receive predictions for all rows.
+</p>
+
+<input
+    type="file"
+    id="csvFile"
+    accept=".csv"
+>
+
+<button
+    id="batchBtn"
+    type="button"
+    onclick="runBatchPrediction()"
+>
+    Run Batch Prediction
+</button>
+
+<div
+    id="batchStatus"
+    style="margin-top:15px; font-weight:bold;"
+></div>
+
 <footer class="footer">
     Built by Beatriz Ferreira |
     PhD Physics • Machine Learning • FastAPI • SHAP
@@ -632,11 +659,79 @@ shapChart = new Chart(ctx, {
     }
 });
 
+
+
 button.disabled = false;
 button.innerText = "Estimate Churn Risk";
 loadingDiv.style.display = "none";    
    
 };
+async function runBatchPrediction()
+{
+    const fileInput =
+        document.getElementById("csvFile");
+
+    const statusDiv =
+        document.getElementById("batchStatus");
+
+    if (!fileInput.files.length)
+    {
+        statusDiv.innerText =
+            "Please select a CSV file.";
+
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append(
+        "file",
+        fileInput.files[0]
+    );
+
+    statusDiv.innerText =
+        "Uploading and generating predictions...";
+
+    try
+    {
+        const response = await fetch(
+            "/batch_predict",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const blob = await response.blob();
+
+        const url =
+            window.URL.createObjectURL(blob);
+
+        const a =
+            document.createElement("a");
+
+        a.href = url;
+        a.download = "predictions.csv";
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
+
+        statusDiv.innerText =
+            "Predictions downloaded successfully.";
+    }
+    catch(error)
+    {
+        console.error(error);
+
+        statusDiv.innerText =
+            "Upload failed.";
+    }
+}
 
 </script>
 
