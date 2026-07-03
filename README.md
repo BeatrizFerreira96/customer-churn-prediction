@@ -69,6 +69,14 @@ Top predictors of churn:
 
 ![SHAP](screenshots/shap1.png)
 
+New Features
+- Single customer churn prediction
+- SHAP explainability
+- Risk categorization
+- Batch CSV predictions
+- Downloadable prediction reports
+
+
 ## Tech Stack
 
 - Python
