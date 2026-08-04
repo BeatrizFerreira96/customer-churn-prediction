@@ -7,7 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-
+/* ==========================================================
+   1. GLOBAL
+   ========================================================== */
 body {
     font-family: 'Inter', sans-serif;
     background: #f4f6f9;
@@ -30,21 +32,67 @@ body {
     box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 }
 
-h2 {
-    text-align: center;
-    font-size: 32px;
-    margin-bottom: 8px;
+.main-layout {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 30px;
+    align-items: start;
 }
+
 
 .subtitle {
     text-align: center;
     color: #777;
     margin-bottom: 35px;
 }
+.page-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
 
+.page-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 50px;
+}
+/* ==========================================================
+   2. TYPOGRAPHY
+   ========================================================== */
+
+h2 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+/* ==========================================================
+   3. PANELS
+   ========================================================== */
+
+.single-panel {
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 16px;
+    padding: 25px;
+}
+.single-panel {
+    border-top: 5px solid #2E7D32;
+}
+.batch-panel {
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 16px;
+    padding: 25px;
+}
+.batch-panel {
+    border-top: 5px solid #673AB7;
+}
+
+/* ==========================================================
+   4. FORMS
+   ========================================================== */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 25px;
     width: 100%;
 }
@@ -64,67 +112,362 @@ input, select {
     border-radius: 10px;
     border: 1px solid #e0e0e0;
 }
+/* ==========================================================
+   5. BUTTONS
+   ========================================================== */
 
-button {
-    grid-column: span 2;
+.single-button,
+.batch-button {
     margin-top: 20px;
-    padding: 14px;
-    background: linear-gradient(
-        135deg,
-        #2196F3,
-        #1565C0
-    );
+    padding: 14px 24px;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
+    transition: 0.3s;
 }
-
-button:hover {
+.single-button {
+    background: linear-gradient(
+        135deg,
+        #2E7D32,
+        #1B5E20
+    );
+}
+.batch-button {
+    background: linear-gradient(
+        135deg,
+        #673AB7,
+        #512DA8
+    );
+}
+.single-button:hover,
+.batch-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-.result-box {
-    margin-top: 25px;
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 18px;
-    text-align: center;
-    font-weight: bold;
-    display: none;
+/* ==========================================================
+   7. PREDICTION REPORT
+   ========================================================== */
+
+.prediction-report{
+    margin-top:30px;
+    padding:25px;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    animation:fadeIn .4s ease;
 }
 
-.result-low {
-    background: #e8f5e9;
-    color: #2e7d32;
+.risk-banner{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 20px;
+    border-radius:30px;
+    font-size:1.5rem;
+    font-weight:700;
 }
 
-.result-high {
-    background: #ffebee;
-    color: #c62828;
+.risk-description{
+    color:#666;
+    margin-bottom:25px;
 }
-.result-medium {
-    background: #fff8e1;
-    color: #ef6c00;
+
+.metrics-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
 }
+
+.metric-card{
+    background:#fafafa;
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+}
+
+.metric-card span{
+    display:block;
+    margin-bottom:10px;
+    color:#666;
+}
+
+.metric-card h2{
+    margin:0;
+    font-size:42px;
+}
+
+.probability-card{
+    border-top:5px solid #FB8C00;
+}
+
+.confidence-card{
+    border-top:5px solid #673AB7;
+}
+
+
+/* ==========================================================
+   8. RECOMMENDATION
+   ========================================================== */
+.recommendation-card{
+    margin-top:24px;
+    padding:25px;
+    border-radius:16px;
+}
+.recommendation-low{
+    background:#F1FFF4;
+    border-left:6px solid #4CAF50;
+}
+.recommendation-medium{
+    background:#FFF8E1;
+    border-left:6px solid #FB8C00;
+}
+.recommendation-high{
+    background:#FFF5F5;
+    border-left:6px solid #F44336;
+}
+/* ==========================================================
+   9. EXPLANATIONS
+   ========================================================== */
+.explanation-title{
+    margin:0 0 20px;
+    font-size:1.25rem;
+    font-weight:700;
+    margin-bottom:20px;
+    color:#333;
+}
+.explanation-container{
+    margin-top:24px;
+    padding:24px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+.explanation-columns{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+.explanation-card{
+    padding:20px;
+    border-radius:12px;
+}
+
+.explanation-card h3{
+    margin-top:0;
+}
+
+.explanation-card ul{
+    margin:0;
+    padding-left:0;
+    list-style:none;
+}
+
+.explanation-card li{
+    margin-bottom:12px;
+}
+
+.increase-risk{
+    background:#FFF5F5;
+    border-left:5px solid #F44336;
+}
+
+.reduce-risk{
+    background:#F1FFF4;
+    border-left:5px solid #4CAF50;
+}
+/* ==========================================================
+   10. SHAP
+   ========================================================== */
 .shap-box {
     margin-top: 20px;
     padding: 20px;
     border-radius: 12px;
     background: #f8f8f8;
 }
-
 .shap-box ul {
     padding-left: 20px;
 }
 
 .shap-box li {
+ margin-bottom: 10px;
+}
+.shap-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+.shap-card{
+    margin-top:24px;
+    padding:24px;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+.shap-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    cursor:pointer;
+    font-weight:700;
+    font-size:1.1rem;
+
+    padding:4px 0;
+}
+
+.shap-header:hover{
+    color:#673AB7;
+}
+
+.shap-content{
+    margin-top:20px;
+}
+/* ==========================================================
+   11. BATCH SUMMARY
+   ========================================================== */
+.batch-card {
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid #eee;
+}
+.kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.kpi-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.kpi-value {
+    font-size: 42px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+.total-card {
+    border-top: 4px solid #607d8b;
+}
+
+.churners-card {
+    border-top: 4px solid #f44336;
+}
+
+.rate-card {
+    border-top: 4px solid #ff9800;
+}
+
+.risk-card {
+    border-top: 4px solid #ff9800;
+}
+.success-message {
+    color: #2e7d32;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.single-header h3 {
+    color: #2e7d32;
+}
+
+.batch-header h3 {
+    color: #673ab7;
+}
+.upload-area {
+    min-height: 180px;
+    width: 85%;
+}
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.upload-area {
+    border: 2px dashed #cfcfe8;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 15px;
+}
+
+.upload-area:hover {
+    border-color: #673AB7;
+    background: #faf8ff;
+}
+
+.upload-area.dragover {
+    border-color: #673AB7;
+    background: #f3efff;
+}
+
+.upload-icon {
+    font-size: 40px;
     margin-bottom: 10px;
 }
 
+.upload-text {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.upload-subtext {
+    color: #666;
+    margin-top: 5px;
+}
+#selectedFile {
+    margin-top: 10px;
+    font-weight: 500;
+    color: #673AB7;
+}
+
+.error-message{
+    color:#D32F2F;
+    background:#FFF5F5;
+    border-left:4px solid #D32F2F;
+    padding:12px;
+    border-radius:8px;
+    margin-top:15px;
+    font-weight:600;
+}
+/* ==========================================================
+   12. FOOTER
+   ========================================================== */
+
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+
+/* ==========================================================
+   13. RESPONSIVE
+   ========================================================== */
+@media (max-width: 1000px)
+{
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+}
 @media (max-width: 600px) {
 
     .container {
@@ -139,106 +482,17 @@ button:hover {
         grid-column: span 1;
     }
 }
-
-.recommendation-box {
-    margin-top: 25px;
-    padding: 20px;
-    border-radius: 12px;
-    background: #f8f8f8;
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
-.recommendation-box h3 {
-    margin-top: 0;
-}
-
-.recommendation-high {
-    border-left: 6px solid #f44336;
-}
-
-.recommendation-low {
-    border-left: 6px solid #4CAF50;
-}
-.shap-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.factor-card {
-    padding: 20px;
-    border-radius: 12px;
-}
-
-.risk-up {
-    background: #fff5f5;
-    border-left: 5px solid #f44336;
-}
-
-.risk-down {
-    background: #f1fff4;
-    border-left: 5px solid #4CAF50;
-}
-
-.factor-card ul {
-    padding-left: 20px;
-}
-
-.footer {
-    margin-top: 40px;
-    text-align: center;
-    color: #777;
-    font-size: 14px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.explanation-container {
-    margin-top: 25px;
-}
-
-.explanation-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.explanation-card {
-    padding: 20px;
-    border-radius: 12px;
-    height: 100%;
-}
-.increase-risk {
-    background: #fff5f5;
-    border-left: 5px solid #f44336;
-}
-
-.reduce-risk {
-    background: #f1fff4;
-    border-left: 5px solid #4CAF50;
-}
-
-.explanation-card h3 {
-    margin-top: 0;
-}
-
-.explanation-card ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-}
-
-.explanation-card li {
-    margin-bottom: 12px;
-}
-
-
-.explanation-container {
-    margin-top: 25px;
-    padding: 20px;
-    border-radius: 12px;
-    background: #f8f8f8;
-}
 
 </style>
 </head>
@@ -247,179 +501,310 @@ button:hover {
 
 <div class="container">
 
-<h2>Customer Churn Prediction</h2>
+    <h1 class="page-title">
+    📊 Customer Churn Prediction
+</h1>
 
-<p class="subtitle">
-    Enter customer information to estimate churn risk
+<p class="page-subtitle">
+    AI-powered customer retention risk analysis
 </p>
 
-<form id="form">
+    <div class="main-layout">
 
-<div class="form-grid">
-    
-<div class="form-group">    
-<label>Gender</label>
-<select id="Gender">
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-</select>
-</div>
+        <!-- SINGLE CUSTOMER PANEL -->
 
-<div class="form-group">
-<label>Senior Citizen</label>
-<select id="Senior_Citizen">
-    <option value="No">No</option>
-    <option value="Yes">Yes</option>
-</select>
-</div>
+        <div class="single-panel">
 
-<div class="form-group">
-<label>Partner</label>
-<select id="Partner">
-    <option value="No">No</option>
-    <option value="Yes">Yes</option>
-</select>
-</div>
+            <div class="section-header single-header">
+                <h3>Single Customer Prediction</h3>
+                <p>
+                    Enter customer information to estimate churn probability.
+                </p>
+            </div>
 
-<div class="form-group">
-<label>Dependents</label>
-<select id="Dependents">
-    <option value="No">No</option>
-    <option value="Yes">Yes</option>
-</select>
-</div>
+            <form id="form">
 
-<div class="form-group">
-<label>Tenure Months</label>
-<input type="number" id="Tenure_Months" value="12">
-</div>
+                <div class="form-grid">
 
-<div class="form-group">
-<label>Monthly Charges</label>
-<input type="number"
-       step="0.01"
-       id="Monthly_Charges"
-       value="70">
-</div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="Gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
 
-<div class="form-group">
-<label>Internet Service</label>
-<select id="Internet_Service">
-    <option value="DSL">DSL</option>
-    <option value="Fiber optic">Fiber optic</option>
-    <option value="No">No</option>
-</select>
-</div>
+                    <div class="form-group">
+                        <label>Senior Citizen</label>
+                        <select id="Senior_Citizen">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
 
-<div class="form-group">
-<label>Contract</label>
-<select id="Contract">
-    <option value="Month-to-month">Month-to-month</option>
-    <option value="One year">One year</option>
-    <option value="Two year">Two year</option>
-</select>
-</div>
+                    <div class="form-group">
+                        <label>Partner</label>
+                        <select id="Partner">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
 
-<div class="form-group">
-<label>Payment Method</label>
-<select id="Payment_Method">
-    <option value="Electronic check">Electronic check</option>
-    <option value="Mailed check">Mailed check</option>
-    <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
-    <option value="Credit card (automatic)">Credit card (automatic)</option>
-</select>
-</div>
+                    <div class="form-group">
+                        <label>Dependents</label>
+                        <select id="Dependents">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
 
-</div>
+                    <div class="form-group">
+                        <label>Tenure Months</label>
+                        <input type="number"
+                               id="Tenure_Months"
+                               value="12">
+                    </div>
 
-<button id="predictBtn" type="submit">
-    Estimate Churn Risk
-</button>
+                    <div class="form-group">
+                        <label>Monthly Charges</label>
+                        <input type="number"
+                               step="0.01"
+                               id="Monthly_Charges"
+                               value="70">
+                    </div>
 
-<div id="loading"
-     style="display:none;
-            text-align:center;
-            margin-top:20px;
-            font-weight:bold;">
-    ⏳ Calculating risk assessment...
-</div>
+                    <div class="form-group">
+                        <label>Internet Service</label>
+                        <select id="Internet_Service">
+                            <option value="DSL">DSL</option>
+                            <option value="Fiber optic">Fiber optic</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
 
-</form>
+                    <div class="form-group">
+                        <label>Contract</label>
+                        <select id="Contract">
+                            <option value="Month-to-month">Month-to-month</option>
+                            <option value="One year">One year</option>
+                            <option value="Two year">Two year</option>
+                        </select>
+                    </div>
 
-<div id="result" class="result-box"></div>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <select id="Payment_Method">
+                            <option value="Electronic check">
+                                Electronic check
+                            </option>
+                            <option value="Mailed check">
+                                Mailed check
+                            </option>
+                            <option value="Bank transfer (automatic)">
+                                Bank transfer (automatic)
+                            </option>
+                            <option value="Credit card (automatic)">
+                                Credit card (automatic)
+                            </option>
+                        </select>
+                    </div>
 
-<div id="risk-container" style="display:none; margin-top:20px;">
-    <h3>Churn Probability</h3>
+                </div>
 
-    <div style="
-        width:100%;
-        background:#e0e0e0;
-        border-radius:10px;
-        overflow:hidden;
-        height:25px;
-    ">
-        <div id="risk-bar" style="
-            width:0%;
-            height:100%;
-            transition:0.5s;
-        "></div>
+                <button
+                    id="predictBtn"
+                    class="single-button"
+                    type="submit">
+                    Predict Churn Probability
+                </button>
+
+                <div id="loading"
+                     style="display:none;
+                            margin-top:20px;
+                            font-weight:bold;">
+                    ⏳ Calculating risk assessment...
+                </div>
+
+            </form>
+
+            <!-- RESULTS -->
+<div id="predictionDashboard"
+     class="prediction-dashboard"
+     style="display:none;">
+
+    <div id="riskBanner" class="risk-banner"></div>
+
+    <p id="riskDescription"></p>
+
+    <div class="metrics-grid">
+
+        <div class="metric-card probability-card">
+            <span>📊 Churn Probability</span>
+            <h2 id="probabilityValue">0%</h2>
+        </div>
+
+        <div class="metric-card confidence-card">
+            <span>🛡 Model Confidence</span>
+            <h2 id="confidenceValue">0%</h2>
+        </div>
+
     </div>
 
-    <p id="risk-text"></p>
+    <div id="recommendationBox"></div>
+
+    <div id="explanations"></div>
+
+<div class="shap-card">
+
+    <div class="shap-header"
+         onclick="toggleShap()">
+
+        📊 SHAP Feature Impact
+
+        <span id="shapArrow">▼</span>
+
+    </div>
+
+    <div id="shapContent"
+         style="display:none;">
+
+        <canvas id="shapChart"></canvas>
+
+    </div>
+
+</div>
+</div>
+            </div>
+
+        
+
+        <!-- BATCH PANEL -->
+
+        <div class="batch-panel">
+
+            <div class="section-header batch-header">
+                <h3>Batch CSV Prediction</h3>
+                <p>
+                    Upload a CSV file containing multiple customers.
+                </p>
+            </div>
+
+<div class="upload-area" id="uploadArea">
+
+    <div class="upload-icon">
+        📄
+    </div>
+
+    <div class="upload-text">
+        Choose a CSV file
+    </div>
+
+    <div class="upload-subtext">
+        or drag and drop here
+    </div>
+
+    <input
+        type="file"
+        id="csvFile"
+        accept=".csv"
+        hidden>
+
 </div>
 
+<div id="selectedFile"></div>
 
-<p id="confidenceText"></p>
+            <button
+                class="batch-button"
+                onclick="runBatchPrediction()">
+                Run Batch Prediction
+            </button>
 
+            <div
+                id="batchStatus"
+                style="
+                    display:none;
+                    margin-top:15px;
+                    font-weight:bold;
+                ">
+            </div>
 
+            <div id="batchSummary"
+                 style="display:none;">
 
-<div id="recommendationBox"></div>
+                <h3>Prediction Summary</h3>
 
-<div id="explanations"></div>
+                <div class="kpi-grid">
 
-<div id="shapChartContainer" style="margin-top:30px;">
-    <h3>SHAP Feature Impact</h3>
-    <canvas id="shapChart"></canvas>
+                    <div class="kpi-card total-card">
+                        <h4>Total Customers</h4>
+                        <div class="kpi-value"
+                             id="totalCustomers">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="kpi-card churners-card">
+                        <h4>Predicted Churners</h4>
+                        <div class="kpi-value"
+                             id="predictedChurners">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="kpi-card rate-card">
+                        <h4>Churn Rate</h4>
+                        <div class="kpi-value"
+                             id="churnRate">
+                            0%
+                        </div>
+                    </div>
+
+                    <div class="kpi-card risk-card">
+                        <h4>Average Risk</h4>
+                        <div class="kpi-value"
+                             id="averageRisk">
+                            0%
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        Built by Beatriz Ferreira |
+        PhD Physics • Machine Learning • FastAPI • SHAP
+    </footer>
+
 </div>
 
-<hr style="margin-top:40px; margin-bottom:30px;">
-
-<h3>Batch CSV Prediction</h3>
-
-<p>
-Upload a CSV file containing multiple customers and receive predictions for all rows.
-</p>
-
-<input
-    type="file"
-    id="csvFile"
-    accept=".csv"
->
-
-<button
-    id="batchBtn"
-    type="button"
-    onclick="runBatchPrediction()"
->
-    Run Batch Prediction
-</button>
-
-<div
-    id="batchStatus"
-    style="margin-top:15px; font-weight:bold;"
-></div>
-
-<footer class="footer">
-    Built by Beatriz Ferreira |
-    PhD Physics • Machine Learning • FastAPI • SHAP
-</footer>
-</div>
-
-
+</body>
 <script>
+function toggleShap()
+{
+    const content =
+        document.getElementById("shapContent");
+
+    const arrow =
+        document.getElementById("shapArrow");
+
+    if(content.style.display==="none")
+    {
+        content.style.display="block";
+        arrow.innerText="▲";
+    }
+    else
+    {
+        content.style.display="none";
+        arrow.innerText="▼";
+    }
+}
 
 document.getElementById("form").onsubmit = async function(e) {
-
 
     
     e.preventDefault();
@@ -478,119 +863,101 @@ document.getElementById("form").onsubmit = async function(e) {
     loadingDiv.style.display = "none";
     console.log(result);
 
- const resultDiv = document.getElementById("result");
 
-resultDiv.style.display = "block";
+const report =
+    document.getElementById(
+        "predictionReport"
+    );
 
-if (result.churn_probability >= 0.6)
-{
-    resultDiv.className = "result-box result-high";
-    resultDiv.innerText = "⚠ High Churn Risk";
-}
-else if (result.churn_probability >= 0.3)
-{
-    resultDiv.className = "result-box result-medium";
-    resultDiv.innerText = "🟡 Moderate Churn Risk";
-}
-else
-{
-    resultDiv.className = "result-box result-low";
-    resultDiv.innerText = "✅ Customer Likely To Stay";
-}
+document.getElementById(
+    "predictionDashboard"
+).style.display = "block";
 
-    let confidenceLabel;
 
-if (result.churn_probability > 0.8 || result.churn_probability < 0.2)
-{
-    confidenceLabel = "High";
-}
-else if (result.churn_probability > 0.65 || result.churn_probability < 0.35)
-{
-    confidenceLabel = "Moderate";
-}
-else
-{
-    confidenceLabel = "Low";
-}
+const riskPercent =
+    result.churn_probability * 100;
 
-document.getElementById("confidenceText").innerText =
-    `Model Confidence: ${(result.confidence * 100).toFixed(1)}%`;
+document.getElementById(
+    "probabilityValue"
+).innerText =
+    riskPercent.toFixed(1) + "%";
 
-    const riskContainer =
-        document.getElementById("risk-container");
+document.getElementById(
+    "confidenceValue"
+).innerText =
+    (result.confidence * 100).toFixed(1) + "%";
 
-    const riskBar =
-        document.getElementById("risk-bar");
+const description =
+document.getElementById("riskDescription");
+let actions = [];
+const banner =
+    document.getElementById("riskBanner");
 
-    const riskText =
-        document.getElementById("risk-text");
-
-    const riskPercent =
-        result.churn_probability * 100;
-
-    riskContainer.style.display = "block";
-
-riskBar.style.width = riskPercent + "%";
-
-let riskColor;
-
-if (result.churn_probability < 0.3)
-    riskColor = "#4CAF50";
-else if (result.churn_probability < 0.6)
-    riskColor = "#ff9800";
-else
-    riskColor = "#f44336";
-
-riskBar.style.background = riskColor;
-    
-    riskText.innerText =
-        riskPercent.toFixed(1) + "% Churn Probability";
-    // SHAP DISPLAY
-
-    let recommendationTitle;
-let recommendationText;
-
-if (result.churn_probability > 0.6)
-{
-    recommendationTitle =
-        "⚠ Retention Action Recommended";
-
-    recommendationText =
-        "Customer exhibits elevated churn risk. Consider loyalty incentives, contract upgrades or proactive support.";
-}
-else if (result.churn_probability > 0.3)
-{
-    recommendationTitle =
-        "🟡 Moderate Churn Risk";
-
-    recommendationText =
-        "Customer may benefit from engagement and retention campaigns.";
-}
-else
-{
-    recommendationTitle =
-        "✅ Stable Customer";
-
-    recommendationText =
-        "Customer appears likely to remain with the service.";
-}
 const recommendationBox =
     document.getElementById("recommendationBox");
 
-recommendationBox.className =
-    "recommendation-box " +
-    (result.churn_probability > 0.6
-        ? "recommendation-high"
-        : "recommendation-low");
+
+if(riskPercent < 30)
+{
+    banner.innerHTML =
+        "🟢 Low Churn Risk";
+
+    banner.style.color =
+        "#2E7D32";
+     recommendationBox.className =
+        "recommendation-card recommendation-low";
+
+     actions = [
+        "Maintain current engagement strategy.",
+        "Continue providing quality customer support.",
+        "Monitor periodically."
+    ];
+}
+else if(riskPercent < 60)
+{
+    banner.innerHTML =
+        "🟡 Moderate Churn Risk";
+
+    banner.style.color =
+        "#FB8C00";
+     recommendationBox.className =
+        "recommendation-card recommendation-medium";
+    actions = [
+        "Send personalised engagement emails.",
+        "Offer a small incentive to increase satisfaction.",
+        "Monitor the customer for future churn risk."
+    ];
+}
+else
+{
+    banner.innerHTML =
+        "🔴 High Churn Risk";
+
+    banner.style.color =
+        "#D32F2F";
+
+    recommendationBox.className =
+        "recommendation-card recommendation-high";
+
+    actions = [
+        "Maintain current engagement strategy.",
+        "Continue providing quality customer support.",
+        "Monitor periodically."
+    ];
+}
+console.log(recommendationBox.className);
+
 
 recommendationBox.innerHTML = `
-    <h3>${recommendationTitle}</h3>
-    <p>${recommendationText}</p>
+    <h3>💡 Recommended Retention Actions</h3>
+
+    <ul>
+        ${actions.map(action => `<li>${action}</li>`).join("")}
+    </ul>
 `;
 
 const explanationsDiv =
     document.getElementById("explanations");
-
 const positiveList =
     result.top_positive
         .map(item =>
@@ -607,16 +974,20 @@ const negativeList =
 
 explanationsDiv.innerHTML = `
 <div class="explanation-container">
-
+    
+    <h3 class="explanation-title">
+        Feature Contribution Analysis
+    </h3>
+    
     <div class="explanation-columns">
 
         <div class="explanation-card increase-risk">
-            <h3>Factors Increasing Churn Risk</h3>
+            <h3>📉 Factors Increasing Churn Risk</h3>
             <ul>${positiveList}</ul>
         </div>
 
         <div class="explanation-card reduce-risk">
-            <h3>Factors Reducing Churn Risk</h3>
+            <h3>📈 Factors Reducing Churn Risk</h3>
             <ul>${negativeList}</ul>
         </div>
 
@@ -666,6 +1037,28 @@ button.innerText = "Estimate Churn Risk";
 loadingDiv.style.display = "none";    
    
 };
+
+const uploadArea =
+    document.getElementById("uploadArea");
+
+const fileInput =
+    document.getElementById("csvFile");
+
+uploadArea.addEventListener("click", () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener("change", () => {
+    if (fileInput.files.length)
+    {
+        document.getElementById(
+            "selectedFile"
+        ).innerText =
+            "📄 " + fileInput.files[0].name;
+    }
+});
+
+
 async function runBatchPrediction()
 {
     const fileInput =
@@ -674,23 +1067,23 @@ async function runBatchPrediction()
     const statusDiv =
         document.getElementById("batchStatus");
 
-    if (!fileInput.files.length)
-    {
-        statusDiv.innerText =
-            "Please select a CSV file.";
-
-        return;
-    }
-
-    const formData = new FormData();
-
-    formData.append(
-        "file",
-        fileInput.files[0]
-    );
-
+    statusDiv.style.display = "block";
+    statusDiv.className = "";
     statusDiv.innerText =
         "Uploading and generating predictions...";
+    if (!fileInput.files.length)
+{
+    statusDiv.innerText =
+        "Please select a CSV file first.";
+    return;
+}
+
+const formData = new FormData();
+
+formData.append(
+    "file",
+    fileInput.files[0]
+); 
 
     try
     {
@@ -701,7 +1094,76 @@ async function runBatchPrediction()
                 body: formData
             }
         );
+   if (!response.ok)
+{
+    const error = await response.json();
 
+    statusDiv.className = "error-message";
+    statusDiv.style.display = "block";
+
+    if (error.detail.missing_values)
+    {
+        statusDiv.innerText =
+            error.detail.error +
+            ": " +
+            Object.entries(error.detail.missing_values)
+                .map(([col, n]) => `${col} (${n})`)
+                .join(", ");
+    }
+    else
+    {
+        statusDiv.innerText =
+            error.detail.error;
+    }
+
+    return;
+}
+statusDiv.className =
+    "success-message";
+
+statusDiv.style.display = "block";
+
+statusDiv.innerText =
+    "✓ Predictions generated and downloaded successfully";
+
+    // Create a NEW FormData
+const summaryFormData = new FormData();
+summaryFormData.append("file", fileInput.files[0]);
+        const summaryResponse = await fetch(
+    "/batch_summary",
+    {
+        method: "POST",
+        body: formData
+    }
+);
+
+       const summary =
+    await summaryResponse.json();
+
+document.getElementById(
+    "batchSummary"
+).style.display = "block";
+
+document.getElementById(
+    "totalCustomers"
+).innerText =
+    summary.total_customers;
+
+document.getElementById(
+    "predictedChurners"
+).innerText =
+    summary.predicted_churners;
+
+document.getElementById(
+    "churnRate"
+).innerText =
+    summary.churn_rate + "%";
+
+document.getElementById(
+    "averageRisk"
+).innerText =
+    summary.average_probability + "%";
+         
         const blob = await response.blob();
 
         const url =
@@ -721,8 +1183,7 @@ async function runBatchPrediction()
 
         window.URL.revokeObjectURL(url);
 
-        statusDiv.innerText =
-            "Predictions downloaded successfully.";
+        
     }
     catch(error)
     {

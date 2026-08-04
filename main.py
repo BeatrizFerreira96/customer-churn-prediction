@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from fastapi import UploadFile, File
@@ -26,6 +26,7 @@ EXPECTED_COLUMNS = [
     "Payment Method",
     "Monthly Charges"
 ]
+
 preprocessor = model.named_steps["preprocessor"]
 
 classifier = model.named_steps["classifier"]
@@ -64,21 +65,62 @@ class CustomerInput(BaseModel):
 async def batch_predict(file: UploadFile = File(...)):
 
     df = pd.read_csv(file.file)
-
+    
     missing_cols = [
         col for col in EXPECTED_COLUMNS
         if col not in df.columns
     ]
 
     if missing_cols:
-        return {
+        raise HTTPException(
+        status_code=400,
+        detail={
             "error": "Missing columns",
             "missing": missing_cols
         }
+    )
 
-    predictions = model.predict(df)
-    probabilities = model.predict_proba(df)[:, 1]
+    # Check for missing values
+    if df[EXPECTED_COLUMNS].isnull().any().any():
 
+        missing = (
+        df[EXPECTED_COLUMNS]
+        .isnull()
+        .sum()
+    )
+
+        missing = missing[missing > 0]
+
+        raise HTTPException(
+        status_code=400,
+        detail={
+            "error": "Missing values detected",
+            "missing_values": missing.to_dict()
+        }
+    )
+    
+    processed = model.named_steps["preprocessor"].transform(df)
+    
+
+    classifier = model.named_steps["classifier"]
+    predictions = classifier.predict(processed)
+    probabilities = classifier.predict_proba(processed)[:, 1]
+    
+    
+    total_customers = len(df)
+
+    predicted_churners = int(sum(predictions))
+
+    churn_rate = round(
+    predicted_churners / total_customers * 100,
+    1
+    )
+
+    avg_probability = round(
+    probabilities.mean() * 100,
+    1
+    )
+    
     df["prediction"] = [
         "Churn" if p == 1 else "No Churn"
         for p in predictions
@@ -217,6 +259,7 @@ def predict(customer: CustomerInput):
     top_positive["shap"] = top_positive["shap"].round(3)
     top_negative["shap"] = top_negative["shap"].round(3)
     
+
     return {
         "prediction": "churn" if pred == 1 else "stay",
         "churn_probability": round(float(prob), 3),
@@ -224,4 +267,73 @@ def predict(customer: CustomerInput):
         "top_positive": top_positive.to_dict("records"),
         "top_negative": top_negative.to_dict("records"),
         "shap_chart": shap_chart.to_dict("records")
+    }
+    
+@app.post("/batch_summary")
+async def batch_summary(file: UploadFile = File(...)):
+    
+    df = pd.read_csv(file.file)
+    
+    missing_cols = [
+        col for col in EXPECTED_COLUMNS
+        if col not in df.columns
+    ]
+
+    if missing_cols:
+       
+        raise HTTPException(
+        status_code=400,
+        detail={
+            "error": "Missing columns",
+            "missing": missing_cols
+        }
+    )
+     # Check for missing values
+    if df[EXPECTED_COLUMNS].isnull().any().any():
+
+        missing = (
+        df[EXPECTED_COLUMNS]
+        .isnull()
+        .sum()
+    )
+
+        missing = missing[missing > 0]
+
+        raise HTTPException(
+        status_code=400,
+        detail={
+            "error": "Missing values detected",
+            "missing_values": missing.to_dict()
+        }
+    )
+        
+    processed = model.named_steps["preprocessor"].transform(df)
+
+    import numpy as np
+    
+   
+
+# Now continue with prediction
+    predictions = model.named_steps["classifier"].predict(processed)
+    probabilities = model.named_steps["classifier"].predict_proba(processed)[:, 1]
+
+    total_customers = len(df)
+
+    predicted_churners = int(sum(predictions))
+
+    churn_rate = round(
+        predicted_churners / total_customers * 100,
+        1
+    )
+
+    avg_probability = round(
+        probabilities.mean() * 100,
+        1
+    )
+
+    return {
+        "total_customers": total_customers,
+        "predicted_churners": predicted_churners,
+        "churn_rate": churn_rate,
+        "average_probability": avg_probability
     }

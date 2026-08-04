@@ -1,19 +1,27 @@
-# Customer Churn Prediction
+# 📊 Customer Churn Prediction
 
-End-to-end Machine Learning application for predicting customer churn.
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
+![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-ML-orange)
+![SHAP](https://img.shields.io/badge/Explainability-SHAP-red)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
+## Application Preview
+
+![Application](screenshots/main_dashboard.png)
+
 
 ## Overview
 
-This project predicts whether a customer is likely to churn using demographic and service subscription information.
+This project is an end-to-end Machine Learning web application that predicts customer churn using demographic and subscription information.
 
-The application includes:
+The application combines a trained Logistic Regression model with an interactive FastAPI dashboard, allowing users to:
 
-- Exploratory Data Analysis (EDA)
-- Data preprocessing pipeline
-- Logistic Regression model
-- SHAP explainability
-- FastAPI backend
-- Interactive HTML frontend
+- Predict churn for individual customers
+- Upload CSV files for batch prediction
+- Download prediction reports
+- Visualize customer-specific SHAP explanations
+- View prediction summaries and churn statistics
 
 ## Model Selection
 
@@ -24,21 +32,32 @@ Multiple machine learning algorithms were evaluated before deployment.
 | Logistic Regression | 0.791 | 0.840 |
 | XGBoost | 0.774 | 0.829 |
 
-Logistic Regression achieved superior performance on the held-out test set and was selected as the final production model. In addition to achieving the highest ROC-AUC score, Logistic Regression offers excellent interpretability, making it well-suited for business decision-making and SHAP-based explainability.
+The final model was selected after comparing multiple algorithms using Accuracy and ROC-AUC.
+
+Although XGBoost performed competitively, Logistic Regression achieved the best overall performance while providing superior interpretability, making it particularly suitable for SHAP explanations and business applications.
 
 
 ## Features
 
-- Gender
-- Senior Citizen
-- Partner
-- Dependents
-- Tenure Months
-- Internet Service
-- Contract Type
-- Payment Method
-- Monthly Charges
+### Machine Learning
 
+- Logistic Regression classifier
+- Data preprocessing pipeline
+- One-Hot Encoding
+- Standard Scaling
+- Probability estimation
+- SHAP explainability
+
+### Web Application
+
+- Single customer prediction
+- Batch CSV prediction
+- Downloadable prediction reports
+- Prediction summary dashboard
+- Customer-specific SHAP explanations
+- Feature contribution analysis
+- Input validation
+- Friendly error handling
 
 ## Dashboard
 
@@ -57,24 +76,17 @@ Customer predicted to churn.
 Churn Probability: 75%
 
 
-## SHAP Feature Importance
+## Explainable AI
 
-Top predictors of churn:
+The application provides local SHAP explanations for every prediction.
 
-1. Tenure Months
-2. Month-to-Month Contract
-3. Fiber Optic Service
-4. Dependents
-5. Monthly Charges
+For each customer it displays:
 
-![SHAP](screenshots/shap1.png)
+- Factors increasing churn risk
+- Factors reducing churn risk
+- SHAP feature importance chart
 
-New Features
-- Single customer churn prediction
-- SHAP explainability
-- Risk categorization
-- Batch CSV predictions
-- Downloadable prediction reports
+This allows users to understand *why* the model reached its prediction rather than only receiving a probability score.
 
 
 ## Tech Stack
@@ -87,22 +99,103 @@ New Features
 - HTML/CSS/JavaScript
 - Git
 
-## Run on Render
+## Live Demo
+
+Try the application online:
+
 https://customer-churn-prediction-o6mm.onrender.com
+``
+
+## Screenshots
+
+### Single Customer Prediction
+
+![Application](screenshots/single_customer.png)
+
+### SHAP Explanation
+
+![Application](screenshots/shap_exp.png)
+
+### Batch CSV Prediction
+
+![Application](screenshots/batch.png)
+
+
+
+## Project Structure
+
+```text
+customer-churn-prediction
+├── data/
+├── notebooks/
+├── screenshots/
+├── src/
+│   ├── churn_model.pkl
+│   ├── feature_names.pkl
+│   └── model_training.py
+├── templates/
+│   └── index.html
+├── main.py
+├── requirements.txt
+└── README.md
 ```
 
+## Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/BeatrizFerreira96/customer-churn-prediction.git
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the application
+
+```bash
+uvicorn main:app --reload
+```
+
+Open
+
+```
+http://127.0.0.1:8000
+```
+
+## Current Capabilities
+
+- Single customer prediction
+- Batch CSV prediction
+- Prediction summary
+- Downloadable prediction reports
+- SHAP explanations
+- Feature contribution analysis
+- Customer-specific recommendations
+- Robust CSV validation
 
 ## Future Improvements
 
-- Real-time SHAP explanations inside the dashboard
-- Enhanced business recommendations
-- Prediction history tracking
-- Interactive visual analytics
-- Customer segmentation insights
+
+- Deploy with Docker
+- Add user authentication
+- Store prediction history in a database
+- Support additional machine learning models
+- Automated model retraining
+- Interactive analytics dashboard
+
+
+## License
+
+This project is licensed under the MIT License.
 
 
 ## Author
+**Beatriz Ferreira**
 
-Beatriz Ferreira
+PhD in Condensed Matter Physics transitioning into Machine Learning and Data Science.
 
-PhD Researcher in Condensed Matter Physics transitioning into Data Science and Machine Learning.
+- GitHub: github.com/BeatrizFerreira96
