@@ -27,15 +27,13 @@ The application combines a trained Logistic Regression model with an interactive
 
 Multiple machine learning algorithms were evaluated before deployment.
 
-| Model | Accuracy | ROC-AUC |
-|---------|---------|---------|
-| Logistic Regression | 0.791 | 0.840 |
-| XGBoost | 0.774 | 0.829 |
+	Model	Accuracy	Precision	ROC-AUC	Training Time (s)
+0	Logistic Regression	0.791341	0.583569	0.841546	0.517
+2	XGBoost	0.789212	0.615616	0.835357	1.147
+1	Random Forest	0.763662	0.516691	0.817628	1.500
 
-The final model was selected after comparing multiple algorithms using Accuracy and ROC-AUC.
 
-Although XGBoost performed competitively, Logistic Regression achieved the best overall performance while providing superior interpretability, making it particularly suitable for SHAP explanations and business applications.
-
+Three classification algorithms (Logistic Regression, Random Forest, and XGBoost) were evaluated using the same preprocessing pipeline and train/test split. Logistic Regression achieved the highest performance across all evaluation metrics while also requiring the shortest training time and providing the greatest interpretability. These characteristics made it the preferred model for deployment and SHAP-based explainability.
 
 ## Features
 

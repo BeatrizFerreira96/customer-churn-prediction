@@ -525,7 +525,25 @@ input, select {
             <form id="form">
 
                 <div class="form-grid">
+                    <div class="form-group">
+                        <label>Prediction Model</label>
 
+                        <select id="Model">
+
+                            <option value="logistic">
+                                Logistic Regression
+                            </option>
+
+                            <option value="random_forest">
+                                Random Forest
+                            </option>
+
+                            <option value="xgboost">
+                                XGBoost
+                            </option>
+
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>Gender</label>
                         <select id="Gender">
@@ -804,6 +822,8 @@ function toggleShap()
     }
 }
 
+let shapChart = null;
+
 document.getElementById("form").onsubmit = async function(e) {
 
     
@@ -814,10 +834,14 @@ document.getElementById("form").onsubmit = async function(e) {
     button.disabled = true;
     button.innerText = "Predicting...";
    
-    let shapChart = null;
+    
 
 
     const data = {
+    
+    model:
+        document.getElementById("Model").value,    
+
     Gender:
         document.getElementById("Gender").value,
 

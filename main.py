@@ -11,10 +11,40 @@ import shap
 
 app = FastAPI()
 
-model = joblib.load("src/churn_model.pkl")
+models = {
+    "logistic": joblib.load("src/logistic_model.pkl"),
+    "random_forest": joblib.load("src/random_forest_model.pkl"),
+    "xgboost": joblib.load("src/xgboost_model.pkl")
+}
 feature_names = joblib.load(
     "src/feature_names.pkl"
 )
+explainers = {}
+
+for name, pipeline in models.items():
+
+    classifier = pipeline.named_steps["classifier"]
+
+    if name == "logistic":
+
+        background = pd.DataFrame(
+            [[0] * len(feature_names)],
+            columns=feature_names
+        )
+
+        explainers[name] = shap.LinearExplainer(
+            classifier,
+            background
+        )
+
+    else:
+
+        explainers[name] = shap.TreeExplainer(
+            classifier
+        )
+        
+        
+
 EXPECTED_COLUMNS = [
     "Gender",
     "Senior Citizen",
@@ -27,22 +57,6 @@ EXPECTED_COLUMNS = [
     "Monthly Charges"
 ]
 
-preprocessor = model.named_steps["preprocessor"]
-
-classifier = model.named_steps["classifier"]
-
-
-background = pd.DataFrame(
-    [[0] * len(feature_names)],
-    columns=feature_names
-)
-
-explainer = shap.LinearExplainer(
-    classifier,
-    background
-)
-
-
 @app.get("/")
 def home():
     return FileResponse("templates/index.html")
@@ -51,6 +65,7 @@ def home():
 
 
 class CustomerInput(BaseModel):
+    model: str = "logistic"
     Gender: str
     Senior_Citizen: str
     Partner: str
@@ -146,6 +161,10 @@ async def batch_predict(file: UploadFile = File(...)):
 @app.post("/predict")
 def predict(customer: CustomerInput):
 
+    selected_model = models[customer.model]
+    
+    explainer = explainers[customer.model]
+    
     input_data = pd.DataFrame([{
         "Gender": customer.Gender,
         "Senior Citizen": customer.Senior_Citizen,
@@ -203,18 +222,33 @@ def predict(customer: CustomerInput):
     }
     
     
-    pred = model.predict(input_data)[0]
+    pred = selected_model.predict(input_data)[0]
 
-    prob = model.predict_proba(input_data)[0][1]
+    prob = selected_model.predict_proba(input_data)[0][1]
 
     confidence = max(prob, 1 - prob)
     
-    
+    preprocessor = selected_model.named_steps["preprocessor"]
     processed = preprocessor.transform(input_data)
+
+    
+
+    print(f"Using model: {customer.model}")
+    print(type(selected_model))
 
     shap_values = explainer(processed)
 
-    customer_shap = shap_values.values[0]
+    print(type(shap_values))
+
+    if hasattr(shap_values, "values"):
+        print("Values shape:", shap_values.values.shape)
+    else:
+        print("No .values attribute")
+        
+    if shap_values.values.ndim == 3:
+        customer_shap = shap_values.values[0, :, 1]
+    else:
+        customer_shap = shap_values.values[0]
     
     shap_df = pd.DataFrame({
     "feature": feature_names,
@@ -234,15 +268,17 @@ def predict(customer: CustomerInput):
     shap_df["abs_shap"] > 0.05
 ]
 
+    positive_features = shap_df[shap_df["shap"] > 0]
+    negative_features = shap_df[shap_df["shap"] < 0]
 # Then create positive/negative tables
     top_positive = (
-    shap_df
+    positive_features
     .sort_values("shap", ascending=False)
     .head(3)
 )
 
     top_negative = (
-    shap_df
+    negative_features
     .sort_values("shap")
     .head(3)
 )
@@ -261,6 +297,7 @@ def predict(customer: CustomerInput):
     
 
     return {
+        "model": customer.model,
         "prediction": "churn" if pred == 1 else "stay",
         "churn_probability": round(float(prob), 3),
         "confidence": round(float(confidence), 3),
