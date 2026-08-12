@@ -148,6 +148,38 @@ input, select {
     box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
+.button-group{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+}
+
+.button-group button{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+}
+#predictBtn{
+    background:#2E7D32;
+    color:white;
+}
+
+#predictBtn:hover{
+    background:#256428;
+}
+#compareBtn{
+    background:#388E3C;
+    color:white;
+}
+
+#compareBtn:hover{
+    background:#2E7D32;
+}
 /* ==========================================================
    7. PREDICTION REPORT
    ========================================================== */
@@ -330,6 +362,117 @@ input, select {
 .shap-content{
     margin-top:20px;
 }
+
+/* ==========================================================
+   10.2 All Models
+   ========================================================== */
+   .comparison-card h3{
+
+    margin:0;
+
+    font-size:22px;
+
+    font-weight:700;
+}
+.comparison-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-top:20px;
+}
+.comparison-card{
+
+    width:240px;
+    min-height:320px;
+
+    padding:22px;
+
+    border-radius:18px;
+
+    background:white;
+
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+
+    text-align:center;
+
+    transition:.25s;
+}
+.comparison-number{
+    font-size:42px;
+    font-weight:bold;
+    margin-top:10px;
+}
+.comparison-header{
+
+    min-height:60px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.comparison-body{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+}
+.comparison-footer{
+
+    margin-top:15px;
+}
+.comparison-value{
+
+    font-size:48px;
+
+    font-weight:700;
+
+    color:#222;
+}
+.comparison-label{
+
+    color:#777;
+
+    font-size:13px;
+
+    margin-top:-8px;
+}
+.prediction-value{
+
+    font-size:20px;
+
+    font-weight:600;
+}
+.comparison-confidence{
+
+    color:#555;
+
+    font-size:15px;
+
+    font-weight:500;
+}
+.production-model{
+
+    border:3px solid #F4B400;
+
+    box-shadow:0 0 18px rgba(244,180,0,.25);
+}
+.comparison-card.low{
+    border-top:6px solid #2E7D32;
+}
+
+.comparison-card.medium{
+    border-top:6px solid #FB8C00;
+}
+
+.comparison-card.high{
+    border-top:6px solid #D32F2F;
+}
+
 /* ==========================================================
    11. BATCH SUMMARY
    ========================================================== */
@@ -525,6 +668,7 @@ input, select {
             <form id="form">
 
                 <div class="form-grid">
+                
                     <div class="form-group">
                         <label>Prediction Model</label>
 
@@ -629,12 +773,22 @@ input, select {
 
                 </div>
 
-                <button
-                    id="predictBtn"
-                    class="single-button"
-                    type="submit">
-                    Predict Churn Probability
-                </button>
+                <div class="button-group">
+
+    <button id="predictBtn" type="submit">
+        Estimate Churn Risk
+    </button>
+
+    <button
+        id="compareBtn"
+        type="button"
+        onclick="compareModels()">
+
+        Compare All Models
+
+    </button>
+
+</div>
 
                 <div id="loading"
                      style="display:none;
@@ -646,6 +800,10 @@ input, select {
             </form>
 
             <!-- RESULTS -->
+ <div id="comparisonDashboard" style="display:none;">
+                         
+</div>
+
 <div id="predictionDashboard"
      class="prediction-dashboard"
      style="display:none;">
@@ -671,7 +829,8 @@ input, select {
     <div id="recommendationBox"></div>
 
     <div id="explanations"></div>
-
+    
+   
 <div class="shap-card">
 
     <div class="shap-header"
@@ -1081,6 +1240,146 @@ fileInput.addEventListener("change", () => {
             "📄 " + fileInput.files[0].name;
     }
 });
+
+async function compareModels(){
+
+    const modelNames = {
+    logistic: "⚡ Logistic Regression",
+    random_forest: "🌳 Random Forest",
+    xgboost: "🚀 XGBoost"
+};
+    const comparisonDashboard =
+    document.getElementById("comparisonDashboard");
+
+comparisonDashboard.style.display = "block";
+
+comparisonDashboard.innerHTML = `
+    <h2 class="comparison-title">
+        📊 Model Comparison
+    </h2>
+
+    <div class="comparison-grid" id="comparisonGrid"></div>
+`;
+
+const comparisonGrid =
+    document.getElementById("comparisonGrid");
+
+
+const data = {
+    model: document.getElementById("Model").value,
+
+    Gender: document.getElementById("Gender").value,
+
+    Senior_Citizen: document.getElementById("Senior_Citizen").value,
+
+    Partner: document.getElementById("Partner").value,
+
+    Dependents: document.getElementById("Dependents").value,
+
+    Tenure_Months: Number(
+        document.getElementById("Tenure_Months").value
+    ),
+
+    Internet_Service:
+        document.getElementById("Internet_Service").value,
+
+    Contract:
+        document.getElementById("Contract").value,
+
+    Payment_Method:
+        document.getElementById("Payment_Method").value,
+
+    Monthly_Charges: Number(
+        document.getElementById("Monthly_Charges").value
+    )
+};
+
+const response = await fetch("/compare_models", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+});
+
+
+
+
+const result = await response.json();
+
+console.log(result);
+
+for (const [model, prediction] of Object.entries(result)) {
+const productionClass =
+    model === "logistic"
+        ? "production-model"
+        : "";
+
+const predictionText =
+    prediction.prediction === "churn"
+        ? "❌ Churn"
+        : "✅ Stay";
+    const risk = prediction.probability * 100;
+
+    let riskText;
+    let riskClass;
+
+    if (risk < 30) {
+        riskText = "🟢 Low Risk";
+        riskClass = "low";
+    }
+    else if (risk < 60) {
+        riskText = "🟡 Moderate Risk";
+        riskClass = "medium";
+    }
+    else {
+        riskText = "🔴 High Risk";
+        riskClass = "high";
+    }
+comparisonGrid.innerHTML += `
+<div class="comparison-card ${riskClass} ${productionClass}">
+
+    <div class="comparison-header">
+
+        <h3>${modelNames[model]}</h3>
+
+    </div>
+
+    <div class="comparison-body">
+
+        <p class="risk-text">
+            ${riskText}
+        </p>
+
+        <div class="comparison-value">
+            ${(prediction.probability * 100).toFixed(1)}%
+        </div>
+
+        <p class="comparison-label">
+            Churn Probability
+        </p>
+
+        <div class="prediction-value">
+            ${predictionText}
+        </div>
+
+    </div>
+
+    <div class="comparison-footer">
+
+        <p class="comparison-confidence">
+            Confidence:
+            ${(prediction.confidence * 100).toFixed(1)}%
+        </p>
+
+    </div>
+
+</div>
+`;
+}
+    console.log(result);
+
+}
 
 
 async function runBatchPrediction()

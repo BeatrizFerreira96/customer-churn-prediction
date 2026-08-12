@@ -306,6 +306,48 @@ def predict(customer: CustomerInput):
         "shap_chart": shap_chart.to_dict("records")
     }
     
+    
+@app.post("/compare_models")
+def compare_models(customer: CustomerInput):
+
+    input_data = pd.DataFrame([{
+        "Gender": customer.Gender,
+        "Senior Citizen": customer.Senior_Citizen,
+        "Partner": customer.Partner,
+        "Dependents": customer.Dependents,
+        "Tenure Months": customer.Tenure_Months,
+        "Internet Service": customer.Internet_Service,
+        "Contract": customer.Contract,
+        "Payment Method": customer.Payment_Method,
+        "Monthly Charges": customer.Monthly_Charges
+    }])
+    
+    results = {}
+
+    for name, model in models.items():
+
+        pred = model.predict(input_data)[0]
+
+        prob = model.predict_proba(input_data)[0][1]
+
+        confidence = max(prob, 1 - prob)
+
+        results[name] = {
+        "prediction":
+            "churn" if pred == 1 else "stay",
+
+        "probability":
+            round(float(prob), 3),
+
+        "confidence":
+            round(float(confidence), 3)
+    }
+    
+    return results
+    
+    
+    
+        
 @app.post("/batch_summary")
 async def batch_summary(file: UploadFile = File(...)):
     
