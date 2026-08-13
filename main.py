@@ -75,6 +75,11 @@ class CustomerInput(BaseModel):
     Contract: str
     Payment_Method: str
     Monthly_Charges: float
+
+class WhatIfInput(CustomerInput):
+    feature: str
+    new_value: str   
+    
     
 @app.post("/batch_predict")
 async def batch_predict(file: UploadFile = File(...)):
@@ -346,7 +351,82 @@ def compare_models(customer: CustomerInput):
     return results
     
     
+@app.post("/what_if")
+def what_if(customer: WhatIfInput):
+
+    selected_model = models[customer.model]
+
+    current_data = pd.DataFrame([{
+        "Gender": customer.Gender,
+        "Senior Citizen": customer.Senior_Citizen,
+        "Partner": customer.Partner,
+        "Dependents": customer.Dependents,
+        "Tenure Months": customer.Tenure_Months,
+        "Internet Service": customer.Internet_Service,
+        "Contract": customer.Contract,
+        "Payment Method": customer.Payment_Method,
+        "Monthly Charges": customer.Monthly_Charges
+    }])
     
+    
+
+    # Current prediction
+    current_probability = selected_model.predict_proba(
+        current_data
+    )[0][1]
+
+    # Create modified customer
+    what_if_data = current_data.copy()
+
+    feature_columns = {
+    "Gender": "Gender",
+    "Senior Citizen": "Senior Citizen",
+    "Partner": "Partner",
+    "Dependents": "Dependents",
+    "Tenure_Months": "Tenure Months",
+    "Internet Service": "Internet Service",
+    "Contract": "Contract",
+    "Payment Method": "Payment Method",
+    "Monthly_Charges": "Monthly Charges",
+}
+  
+    column = feature_columns[customer.feature]
+
+    if customer.feature in ["Tenure Months", "Tenure_Months"]:
+        what_if_data[column] = int(customer.new_value)
+
+    elif customer.feature in ["Monthly Charges", "Monthly_Charges"]:
+        what_if_data[column] = float(customer.new_value)
+
+    else:
+        what_if_data[column] = customer.new_value
+
+    # What-if prediction
+    what_if_probability = selected_model.predict_proba(
+        what_if_data
+    )[0][1]
+
+    change = what_if_probability - current_probability
+    print("FEATURE RECEIVED:", customer.feature)
+    print("NEW VALUE:", customer.new_value)
+    print("MODIFIED DATA:")
+    print(what_if_data)
+    
+    return {
+        "model": customer.model,
+
+        "current_probability": round(
+            float(current_probability), 3
+        ),
+
+        "what_if_probability": round(
+            float(what_if_probability), 3
+        ),
+
+        "change": round(
+            float(change), 3
+        )
+    }    
         
 @app.post("/batch_summary")
 async def batch_summary(file: UploadFile = File(...)):

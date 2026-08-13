@@ -165,12 +165,12 @@ input, select {
     transition:0.2s;
 }
 #predictBtn{
-    background:#2E7D32;
+    background:#388E3C;
     color:white;
 }
 
 #predictBtn:hover{
-    background:#256428;
+    background:#388E3C;
 }
 #compareBtn{
     background:#388E3C;
@@ -179,6 +179,41 @@ input, select {
 
 #compareBtn:hover{
     background:#2E7D32;
+}
+#whatIfBtn{
+    background:#388E3C;
+    color:white;
+}
+#whatIfBtn:hover{
+    background:#2E7D32;
+}
+
+.what-if-button {
+    width: 100%;
+    padding: 14px 20px;
+    margin-top: 18px;
+
+    background: #2f8f3a;
+    color: white;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.what-if-button:hover {
+    background: #267a30;
+    transform: translateY(-1px);
+}
+
+.what-if-button:active {
+    transform: translateY(0);
 }
 /* ==========================================================
    7. PREDICTION REPORT
@@ -635,6 +670,51 @@ input, select {
         transform:translateY(0);
     }
 }
+/* ==========================================================
+   14. WHAT IF
+   ========================================================== */
+
+.what-if-container {
+    margin-top: 20px;
+    padding: 10px 0 20px;
+}
+
+.what-if-description {
+    text-align: center;
+    color: #555;
+    margin-bottom: 24px;
+}
+
+.what-if-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.what-if-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.what-if-field label {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.what-if-field select {
+    width: 100%;
+    padding: 12px 14px;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    background: white;
+
+    font-size: 14px;
+    box-sizing: border-box;
+}
 
 
 </style>
@@ -788,6 +868,10 @@ input, select {
 
     </button>
 
+    <button id="whatIfBtn" onclick="showWhatIf()">
+    🔍 What-If Analysis
+    </button>
+
 </div>
 
                 <div id="loading"
@@ -800,9 +884,7 @@ input, select {
             </form>
 
             <!-- RESULTS -->
- <div id="comparisonDashboard" style="display:none;">
-                         
-</div>
+
 
 <div id="predictionDashboard"
      class="prediction-dashboard"
@@ -850,6 +932,11 @@ input, select {
     </div>
 
 </div>
+</div>
+<div id="whatIfDashboard" style="display:none;">
+</div>
+<div id="comparisonDashboard" style="display:none;">
+                         
 </div>
             </div>
 
@@ -1381,6 +1468,395 @@ comparisonGrid.innerHTML += `
 
 }
 
+function showWhatIf() {
+
+    const whatIfDashboard =
+        document.getElementById("whatIfDashboard");
+
+    whatIfDashboard.style.display = "block";
+
+    whatIfDashboard.innerHTML = `
+        <div class="what-if-container">
+
+            <h2 class="comparison-title">
+                🔍 What-If Analysis
+            </h2>
+
+            <p class="what-if-description">
+                Explore how changing a customer characteristic
+                could affect the predicted churn risk.
+            </p>
+
+            <div class="what-if-controls">
+
+    <div class="what-if-field">
+        <label for="whatIfFeature">
+            Feature to change
+        </label>
+
+        <select id="whatIfFeature">
+            <option value="Contract">
+                Contract
+            </option>
+
+            <option value="Internet Service">
+                Internet Service
+            </option>
+
+            <option value="Payment Method">
+                Payment Method
+            </option>
+
+            <option value="Gender">
+                Gender
+            </option>
+
+            <option value="Senior Citizen">
+                Senior Citizen
+            </option>
+
+            <option value="Partner">
+                Partner
+            </option>
+
+            <option value="Dependents">
+                Dependents
+            </option>
+            <option value="Tenure_Months">
+                Tenure Months
+            </option>
+            <option value="Monthly_Charges">
+                Monthly Charges
+            </option>
+        </select>
+    </div>
+
+
+    <div class="what-if-field">
+
+        <label for="whatIfValue">New value</label>
+
+<div id="whatIfValueContainer">
+    <select id="whatIfValue"></select>
+</div>
+
+
+    </div>
+
+</div>
+
+
+<button
+    class="what-if-button"
+    onclick="runWhatIf()">
+    🔍 Run What-If Analysis
+</button>
+
+<div id="whatIfResult"></div>
+
+        </div>
+    `;
+
+    updateWhatIfValues();
+}
+function updateWhatIfValues() {
+
+    const feature =
+        document.getElementById("whatIfFeature").value;
+
+    const container =
+        document.getElementById("whatIfValueContainer");
+
+    const options = {
+
+        "Contract": [
+            "Month-to-month",
+            "One year",
+            "Two year"
+        ],
+
+        "Internet Service": [
+            "DSL",
+            "Fiber optic",
+            "No"
+        ],
+
+        "Payment Method": [
+            "Electronic check",
+            "Mailed check",
+            "Bank transfer (automatic)",
+            "Credit card (automatic)"
+        ],
+
+        "Gender": [
+            "Male",
+            "Female"
+        ],
+
+        "Senior Citizen": [
+            "No",
+            "Yes"
+        ],
+
+        "Partner": [
+            "No",
+            "Yes"
+        ],
+
+        "Dependents": [
+            "No",
+            "Yes"
+        ]
+    };
+
+
+    // Numerical feature: Tenure
+    if (
+        feature === "Tenure Months" ||
+        feature === "Tenure_Months"
+    ) {
+
+        container.innerHTML = `
+            <input
+                type="number"
+                id="whatIfValue"
+                min="0"
+                max="72"
+                step="1"
+                value="12"
+            >
+        `;
+
+    }
+
+    // Numerical feature: Monthly Charges
+    else if (
+        feature === "Monthly Charges" ||
+        feature === "Monthly_Charges"
+    ) {
+
+        container.innerHTML = `
+            <input
+                type="number"
+                id="whatIfValue"
+                min="0"
+                step="0.01"
+                value="70"
+            >
+        `;
+
+    }
+
+    // Categorical features
+    else {
+
+        container.innerHTML = `
+            <select id="whatIfValue"></select>
+        `;
+
+        const valueSelect =
+            document.getElementById("whatIfValue");
+
+        valueSelect.innerHTML =
+            options[feature]
+                .map(value =>
+                    `<option value="${value}">
+                        ${value}
+                    </option>`
+                )
+                .join("");
+    }
+}
+document.addEventListener("change", function(event) {
+
+    if (event.target.id === "whatIfFeature") {
+        updateWhatIfValues();
+    }
+
+});
+
+async function runWhatIf() {
+
+    const feature =
+        document.getElementById("whatIfFeature").value;
+
+    const newValue =
+        document.getElementById("whatIfValue").value;
+
+    const resultDiv =
+        document.getElementById("whatIfResult");
+
+    const featureDisplayNames = {
+    "Tenure_Months": "Tenure Months",
+    "Monthly_Charges": "Monthly Charges",
+    "Senior_Citizen": "Senior Citizen",
+    "Internet_Service": "Internet Service",
+    "Payment_Method": "Payment Method"
+};
+
+    const displayFeature =
+    featureDisplayNames[feature] || feature;   
+    
+    
+    resultDiv.innerHTML = `
+        <p class="what-if-loading">
+            Calculating...
+        </p>
+    `;
+
+    const data = {
+
+        model:
+            document.getElementById("Model").value,
+
+        Gender:
+            document.getElementById("Gender").value,
+
+        Senior_Citizen:
+            document.getElementById("Senior_Citizen").value,
+
+        Partner:
+            document.getElementById("Partner").value,
+
+        Dependents:
+            document.getElementById("Dependents").value,
+
+        Tenure_Months:
+            Number(
+                document.getElementById("Tenure_Months").value
+            ),
+
+        Internet_Service:
+            document.getElementById("Internet_Service").value,
+
+        Contract:
+            document.getElementById("Contract").value,
+
+        Payment_Method:
+            document.getElementById("Payment_Method").value,
+
+        Monthly_Charges:
+            Number(
+                document.getElementById("Monthly_Charges").value
+            ),
+
+        feature: feature,
+
+        new_value: newValue
+    };
+
+
+    const response = await fetch("/what_if", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(data)
+    });
+
+
+    const result = await response.json();
+
+    console.log("What-If result:", result);
+
+
+    const currentRisk =
+        result.current_probability * 100;
+
+    const whatIfRisk =
+        result.what_if_probability * 100;
+
+    const change =
+        result.change * 100;
+
+
+    let changeText;
+
+    if (change < 0) {
+
+        changeText =
+            `↓ ${Math.abs(change).toFixed(1)}
+             percentage points`;
+
+    }
+    else if (change > 0) {
+
+        changeText =
+            `↑ ${change.toFixed(1)}
+             percentage points`;
+
+    }
+    else {
+
+        changeText =
+            "No change";
+
+    }
+
+
+    resultDiv.innerHTML = `
+
+        <div class="what-if-results">
+
+            <div class="what-if-card">
+
+                <h3>Current Risk</h3>
+
+                <div class="what-if-risk">
+                    ${currentRisk.toFixed(1)}%
+                </div>
+
+            </div>
+
+
+            <div class="what-if-arrow">
+                →
+            </div>
+
+
+            <div class="what-if-card">
+
+                <h3>What-If Risk</h3>
+
+                <div class="what-if-risk">
+                    ${whatIfRisk.toFixed(1)}%
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="what-if-change">
+
+            <h3>
+                ${changeText}
+            </h3>
+
+            <p>
+    ${
+        change < 0
+            ? `🟢 Changing <strong>${displayFeature}</strong> to
+               <strong>${newValue}</strong> reduces the predicted
+               churn risk by <strong>${Math.abs(change).toFixed(1)}
+               percentage points</strong>.`
+            : change > 0
+                ? `🔴 Changing <strong>${displayFeature}</strong> to
+                   <strong>${newValue}</strong> increases the predicted
+                   churn risk by <strong>${change.toFixed(1)}
+                   percentage points</strong>.`
+                : `⚪ Changing <strong>${displayFeature}</strong> to
+                   <strong>${newValue}</strong> does not change the
+                   predicted churn risk.`
+    }
+</p>
+
+        </div>
+    `;
+}
 
 async function runBatchPrediction()
 {
